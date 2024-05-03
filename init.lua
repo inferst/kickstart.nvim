@@ -281,8 +281,6 @@ require('lazy').setup({
 
       -- Document existing key chains
       require('which-key').register {
-        ['<leader>n'] = { name = 'Floaterm[N]ew', _ = 'which_key_ignore' },
-
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
         ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
         ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
@@ -328,8 +326,6 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-
-      { 'nvim-telescope/telescope-file-browser.nvim' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -387,9 +383,6 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
-      pcall(require('telescope').load_extension, 'file_browser')
-
-      vim.keymap.set('n', '<leader>b', '<CMD>Telescope file_browser<CR>', { desc = 'File [B]rowser' })
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -947,9 +940,6 @@ vim.api.nvim_create_autocmd('Filetype', {
   pattern = { 'javascript', 'typescript' },
   command = 'setlocal colorcolumn=80',
 })
-
-vim.g.floaterm_width = 0.8
-vim.g.floaterm_height = 0.8
 
 vim.opt.equalalways = false
 
