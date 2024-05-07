@@ -819,16 +819,9 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    -- 'folke/tokyonight.nvim',
-    'Mofiqul/vscode.nvim',
-    -- 'catppuccin/nvim',
-    -- 'rebelot/kanagawa.nvim',
+    'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
-      require('vscode').setup {
-        -- transparent = true,
-        -- flavour = 'frappe',
-      }
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -859,6 +852,32 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
+
+      local starter = require 'mini.starter'
+
+      starter.setup {
+        header = table.concat({
+          [[███    ███ ██ ██   ██ ███████ ]],
+          [[████  ████ ██ ██  ██  ██      ]],
+          [[██ ████ ██ ██ █████   █████   ]],
+          [[██  ██  ██ ██ ██  ██  ██      ]],
+          [[██      ██ ██ ██   ██ ███████ ]],
+          [[                              ]],
+          [[                              ]],
+          [[██████  ██ ███    ███ ███████ ]],
+          [[██   ██ ██ ████  ████ ██      ]],
+          [[██████  ██ ██ ████ ██ █████   ]],
+          [[██   ██ ██ ██  ██  ██ ██      ]],
+          [[██   ██ ██ ██      ██ ███████ ]],
+          [[                              ]],
+          [[                              ]],
+        }, '\n'),
+        footer = '',
+        query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_.',
+        items = {
+          starter.sections.recent_files(5, true, false),
+        },
+      }
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
