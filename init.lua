@@ -354,9 +354,9 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
-          --   mappings = {
-          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-          --   },
+          -- mappings = {
+          --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          -- },
           file_ignore_patterns = {
             '.git/',
           },
@@ -371,6 +371,12 @@ require('lazy').setup({
           },
           live_grep = {
             additional_args = { '--hidden' },
+          },
+          oldfiles = {
+            cwd_only = true,
+          },
+          lsp_references = {
+            show_line = false,
           },
         },
         extensions = {
@@ -600,6 +606,32 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {
           commands = {
+            RenameFile = {
+              function()
+                local target_file
+                local source_file = vim.api.nvim_buf_get_name(0)
+
+                vim.ui.input({
+                  prompt = 'Target : ',
+                  completion = 'file',
+                  default = source_file,
+                }, function(input)
+                  target_file = input
+                end)
+
+                vim.lsp.util.rename(source_file, target_file, {})
+
+                vim.lsp.buf.execute_command {
+                  command = '_typescript.applyRenameFile',
+                  arguments = { {
+                    sourceUri = source_file,
+                    targetUri = target_file,
+                  } },
+                  title = '',
+                }
+              end,
+              description = 'Rename File',
+            },
             OrganizeImports = {
               function()
                 vim.lsp.buf.execute_command {
@@ -822,6 +854,16 @@ require('lazy').setup({
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      require('tokyonight').setup {
+        -- transparent = true,
+        -- styles = {
+        --   sidebars = 'transparent',
+        --   floats = 'transparent',
+        -- },
+      }
+      require('vscode').setup {
+        transparent = true,
+      }
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -857,20 +899,21 @@ require('lazy').setup({
 
       starter.setup {
         header = table.concat({
-          [[███    ███ ██ ██   ██ ███████ ]],
-          [[████  ████ ██ ██  ██  ██      ]],
-          [[██ ████ ██ ██ █████   █████   ]],
-          [[██  ██  ██ ██ ██  ██  ██      ]],
-          [[██      ██ ██ ██   ██ ███████ ]],
-          [[                              ]],
-          [[                              ]],
-          [[██████  ██ ███    ███ ███████ ]],
-          [[██   ██ ██ ████  ████ ██      ]],
-          [[██████  ██ ██ ████ ██ █████   ]],
-          [[██   ██ ██ ██  ██  ██ ██      ]],
-          [[██   ██ ██ ██      ██ ███████ ]],
-          [[                              ]],
-          [[                              ]],
+          [[
+███████████████████████████
+███████████████████████████
+█████████      ███      ███
+█████████▒▒    ███▒▒    ███
+█████████      ███      ███
+███████████████████████████
+███████████████████████████
+███████████████████████████
+█████████  ███████████  ███
+███████████           █████
+███████████████████████████
+███████████████████████████
+███████████████████████████
+]],
         }, '\n'),
         footer = '',
         query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_.',
@@ -989,7 +1032,5 @@ vim.api.nvim_create_autocmd('Filetype', {
   pattern = { 'javascript', 'typescript' },
   command = 'setlocal colorcolumn=80',
 })
-
--- vim.opt.equalalways = false
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
