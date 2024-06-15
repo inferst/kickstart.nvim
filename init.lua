@@ -604,6 +604,23 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              checkOnSave = {
+                command = 'clippy',
+                extraArgs = {
+                  '--',
+                  '--no-deps',
+                  '-Dclippy::correctness',
+                  '-Dclippy::complexity',
+                  '-Wclippy::perf',
+                  '-Wclippy::pedantic',
+                },
+              },
+            },
+          },
+        },
         tsserver = {
           commands = {
             RenameFile = {
@@ -861,9 +878,11 @@ require('lazy').setup({
         --   floats = 'transparent',
         -- },
       }
+
       require('vscode').setup {
-        transparent = true,
+        -- transparent = true,
       }
+
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -976,6 +995,15 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
+  {
+    'nvim_chaos',
+    dir = '~/projects/nvim-chaos',
+    priority = 1, -- Make sure to load this before all the other start plugins.
+    config = function(_)
+      require 'nvim_chaos'
     end,
   },
 
