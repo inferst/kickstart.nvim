@@ -102,7 +102,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -347,6 +347,35 @@ require('lazy').setup({
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'TelescopeResults',
+        callback = function(ctx)
+          vim.api.nvim_buf_call(ctx.buf, function()
+            vim.fn.matchadd('TelescopeParent', '\t\t.*$')
+            vim.api.nvim_set_hl(0, 'TelescopeParent', { link = 'Comment' })
+          end)
+        end,
+      })
+
+      local function filenameFirst(_, path)
+        local segments = {}
+        for segment in string.gmatch(path, '[^/]+') do
+          table.insert(segments, segment)
+        end
+
+        local tail = segments[#segments]
+        local parent_segments = {}
+        for i = math.max(1, #segments - 10), #segments - 1 do
+          table.insert(parent_segments, segments[i])
+        end
+
+        local parent = table.concat(parent_segments, '/')
+        if parent == '' then
+          return tail
+        end
+        return string.format('%s\t\t%s', tail, parent)
+      end
+
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
@@ -359,23 +388,52 @@ require('lazy').setup({
           -- },
           file_ignore_patterns = {
             '.git/',
+            '.node_modules/',
           },
         },
         pickers = {
+          buffers = {
+            path_display = filenameFirst,
+            layout_config = {
+              preview_width = 0.5,
+            },
+            previewer = false,
+          },
           find_files = {
+            path_display = filenameFirst,
+            layout_config = {
+              preview_width = 0.5,
+            },
+            previewer = false,
             hidden = true,
             no_ignore = true,
           },
           grep_string = {
+            path_display = { 'absolute' },
+            layout_config = {
+              preview_width = 0.5,
+            },
             additional_args = { '--hidden' },
           },
           live_grep = {
+            path_display = { 'absolute' },
+            layout_config = {
+              preview_width = 0.5,
+            },
             additional_args = { '--hidden' },
           },
           oldfiles = {
+            path_display = filenameFirst,
+            layout_config = {
+              preview_width = 0.5,
+            },
             cwd_only = true,
           },
           lsp_references = {
+            path_display = filenameFirst,
+            layout_config = {
+              preview_width = 0.5,
+            },
             show_line = false,
           },
         },
@@ -963,6 +1021,9 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'regex', 'markdown_inline' },
       -- Autoinstall languages that are not installed
@@ -980,6 +1041,48 @@ require('lazy').setup({
         end,
       },
       indent = { enable = true, disable = { 'ruby' } },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          include_surrounding_whitespace = true,
+          keymaps = {
+            -- You can use the capture groups defined in textobjects.scm
+            ['af'] = { query = '@function.outer', desc = 'around a function' },
+            ['if'] = { query = '@function.inner', desc = 'inner part of a function' },
+            ['ac'] = { query = '@class.outer', desc = 'around a class' },
+            ['ic'] = { query = '@class.inner', desc = 'inner part of a class' },
+            ['ai'] = { query = '@conditional.outer', desc = 'around an if statement' },
+            ['ii'] = { query = '@conditional.inner', desc = 'inner part of an if statement' },
+            ['al'] = { query = '@loop.outer', desc = 'around a loop' },
+            ['il'] = { query = '@loop.inner', desc = 'inner part of a loop' },
+            ['ap'] = { query = '@parameter.outer', desc = 'around parameter' },
+            ['ip'] = { query = '@parameter.inner', desc = 'inside a parameter' },
+          },
+          selection_modes = {
+            ['@parameter.outer'] = 'v', -- charwise
+            ['@parameter.inner'] = 'v', -- charwise
+            ['@function.outer'] = 'v', -- charwise
+            ['@conditional.outer'] = 'V', -- linewise
+            ['@loop.outer'] = 'V', -- linewise
+            ['@class.outer'] = '<c-v>', -- blockwise
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_previous_start = {
+            ['[f'] = { query = '@function.outer', desc = 'Previous function' },
+            ['[c'] = { query = '@class.outer', desc = 'Previous class' },
+            ['[p'] = { query = '@parameter.inner', desc = 'Previous parameter' },
+          },
+          goto_next_start = {
+            [']f'] = { query = '@function.outer', desc = 'Next function' },
+            [']c'] = { query = '@class.outer', desc = 'Next class' },
+            [']p'] = { query = '@parameter.inner', desc = 'Next parameter' },
+          },
+        },
+      },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -995,15 +1098,6 @@ require('lazy').setup({
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-    end,
-  },
-
-  {
-    'nvim_chaos',
-    dir = '~/projects/nvim-chaos',
-    priority = 1, -- Make sure to load this before all the other start plugins.
-    config = function(_)
-      require 'nvim_chaos'
     end,
   },
 
