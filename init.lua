@@ -306,7 +306,7 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
+    -- branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -347,35 +347,6 @@ require('lazy').setup({
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'TelescopeResults',
-        callback = function(ctx)
-          vim.api.nvim_buf_call(ctx.buf, function()
-            vim.fn.matchadd('TelescopeParent', '\t\t.*$')
-            vim.api.nvim_set_hl(0, 'TelescopeParent', { link = 'Comment' })
-          end)
-        end,
-      })
-
-      local function filenameFirst(_, path)
-        local segments = {}
-        for segment in string.gmatch(path, '[^/]+') do
-          table.insert(segments, segment)
-        end
-
-        local tail = segments[#segments]
-        local parent_segments = {}
-        for i = math.max(1, #segments - 10), #segments - 1 do
-          table.insert(parent_segments, segments[i])
-        end
-
-        local parent = table.concat(parent_segments, '/')
-        if parent == '' then
-          return tail
-        end
-        return string.format('%s\t\t%s', tail, parent)
-      end
-
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
@@ -388,19 +359,22 @@ require('lazy').setup({
           -- },
           file_ignore_patterns = {
             '.git/',
-            '.node_modules/',
+            -- '.node_modules/',
+          },
+          path_display = {
+            filename_first = {
+              reverse_directories = false,
+            },
           },
         },
         pickers = {
           buffers = {
-            path_display = filenameFirst,
             layout_config = {
               preview_width = 0.5,
             },
             previewer = false,
           },
           find_files = {
-            path_display = filenameFirst,
             layout_config = {
               preview_width = 0.5,
             },
@@ -409,28 +383,24 @@ require('lazy').setup({
             no_ignore = true,
           },
           grep_string = {
-            path_display = { 'absolute' },
             layout_config = {
               preview_width = 0.5,
             },
             additional_args = { '--hidden' },
           },
           live_grep = {
-            path_display = { 'absolute' },
             layout_config = {
               preview_width = 0.5,
             },
             additional_args = { '--hidden' },
           },
           oldfiles = {
-            path_display = filenameFirst,
             layout_config = {
               preview_width = 0.5,
             },
             cwd_only = true,
           },
           lsp_references = {
-            path_display = filenameFirst,
             layout_config = {
               preview_width = 0.5,
             },
@@ -785,16 +755,16 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      -- format_on_save = function(bufnr)
+      --   -- Disable "format_on_save lsp_fallback" for languages that don't
+      --   -- have a well standardized coding style. You can add additional
+      --   -- languages here or re-enable it for the disabled ones.
+      --   local disable_filetypes = { c = true, cpp = true }
+      --   return {
+      --     timeout_ms = 500,
+      --     lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+      --   }
+      -- end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -1154,5 +1124,7 @@ vim.api.nvim_create_autocmd('Filetype', {
   pattern = { 'javascript', 'typescript' },
   command = 'setlocal colorcolumn=80',
 })
+
+vim.opt.langmap = 'ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz'
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
