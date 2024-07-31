@@ -238,7 +238,15 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup {
+        -- JSX
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+      }
+    end,
+  },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
@@ -354,6 +362,13 @@ require('lazy').setup({
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
+      local layout_config = {
+        flip_columns = 120,
+        horizontal = {
+          preview_width = 0.5,
+        },
+      }
+
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
@@ -364,6 +379,11 @@ require('lazy').setup({
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
+          mappings = {
+            n = {
+              ['<c-d>'] = require('telescope.actions').delete_buffer,
+            },
+          },
           file_ignore_patterns = {
             '.git/',
             -- '.node_modules/',
@@ -376,41 +396,33 @@ require('lazy').setup({
         },
         pickers = {
           buffers = {
-            layout_config = {
-              preview_width = 0.5,
-            },
             previewer = false,
+            sort_lastused = true,
+            ignore_current_buffer = true,
           },
           find_files = {
-            layout_config = {
-              preview_width = 0.5,
-            },
             previewer = false,
             hidden = true,
             no_ignore = true,
           },
           grep_string = {
-            layout_config = {
-              preview_width = 0.5,
-            },
+            layout_strategy = 'flex',
+            layout_config = layout_config,
             additional_args = { '--hidden' },
           },
           live_grep = {
-            layout_config = {
-              preview_width = 0.5,
-            },
+            layout_strategy = 'flex',
+            layout_config = layout_config,
             additional_args = { '--hidden' },
           },
           oldfiles = {
-            layout_config = {
-              preview_width = 0.5,
-            },
+            layout_strategy = 'flex',
+            layout_config = layout_config,
             cwd_only = true,
           },
           lsp_references = {
-            layout_config = {
-              preview_width = 0.5,
-            },
+            layout_strategy = 'flex',
+            layout_config = layout_config,
             show_line = false,
           },
         },
@@ -708,7 +720,7 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -732,6 +744,8 @@ require('lazy').setup({
         'html-lsp',
         'json-lsp',
         'css-lsp',
+        'eslint-lsp',
+        'stylelint-lsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -786,6 +800,7 @@ require('lazy').setup({
         typescriptreact = { { 'prettier', 'prettierd' } },
         javascript = { { 'prettier', 'prettierd' } },
         javascriptreact = { { 'prettier', 'prettierd' } },
+        css = { { 'prettier', 'prettierd' } },
       },
     },
   },
@@ -909,12 +924,10 @@ require('lazy').setup({
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
-      require('vscode').setup()
-
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'vscode'
+      vim.cmd.colorscheme 'catppuccin'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -1004,11 +1017,6 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
-        -- disable = function(_, bufnr)
-        --   local buf_name = vim.api.nvim_buf_get_name(bufnr)
-        --   local file_size = vim.api.nvim_call_function('getfsize', { buf_name })
-        --   return file_size > 256 * 1024
-        -- end,
       },
       indent = { enable = true, disable = { 'ruby' } },
       textobjects = {
