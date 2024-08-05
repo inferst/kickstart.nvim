@@ -165,6 +165,7 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -403,6 +404,11 @@ require('lazy').setup({
             layout_strategy = 'flex',
             layout_config = layout_config,
             show_line = false,
+          },
+          colorscheme = {
+            layout_strategy = 'flex',
+            layout_config = layout_config,
+            enable_preview = true,
           },
         },
         extensions = {
@@ -709,7 +715,7 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              diagnostics = { disable = { 'missing-fields' } },
+              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -922,7 +928,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'catppuccin'
+      vim.cmd.colorscheme 'tokyonight'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -1129,8 +1135,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
 local get_option = vim.filetype.get_option
+---@diagnostic disable-next-line: duplicate-set-field
 vim.filetype.get_option = function(filetype, option)
-  return option == "commentstring"
-    and require("ts_context_commentstring.internal").calculate_commentstring()
-    or get_option(filetype, option)
+  return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
 end

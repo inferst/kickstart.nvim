@@ -19,4 +19,12 @@ return {
     'rose-pine/neovim',
     priority = 1000,
   },
+  {
+    'RRethy/base16-nvim',
+    priority = 1000,
+  },
+  {
+    'shaunsingh/nord.nvim',
+    priority = 1000,
+  },
 }
