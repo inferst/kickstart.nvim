@@ -488,9 +488,18 @@ require('lazy').setup({
       {
         'j-hui/fidget.nvim',
         opts = {
+          progress = {
+            display = {
+              progress_icon = {
+                pattern = 'bouncing_bar',
+              },
+              done_icon = '[100%]',
+            },
+          },
           notification = {
             window = {
               winblend = 0,
+              border = 'single',
             },
           },
         },
@@ -928,7 +937,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight'
+      vim.cmd.colorscheme 'nord'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -957,46 +966,16 @@ require('lazy').setup({
       -- require('mini.surround').setup()
 
       local starter = require 'mini.starter'
+      local header = require 'custom.starter'
 
       starter.setup {
-        header = table.concat({
-          [[
-███████████████████████████
-███████████████████████████
-█████████      ███      ███
-█████████▒▒    ███▒▒    ███
-█████████      ███      ███
-███████████████████████████
-███████████████████████████
-███████████████████████████
-█████████  ███████████  ███
-███████████           █████
-███████████████████████████
-███████████████████████████
-███████████████████████████
-]],
-        }, '\n'),
+        header = header,
         footer = '',
         query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_.',
         items = {
           starter.sections.recent_files(5, true, false),
         },
       }
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -1100,26 +1079,6 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-}, {
-  ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    -- icons = vim.g.have_nerd_font and {} or {
-    --   cmd = '⌘',
-    --   config = '🛠',
-    --   event = '📅',
-    --   ft = '📂',
-    --   init = '⚙',
-    --   keys = '🗝',
-    --   plugin = '🔌',
-    --   runtime = '💻',
-    --   require = '🌙',
-    --   source = '📄',
-    --   start = '🚀',
-    --   task = '📌',
-    --   lazy = '💤 ',
-    -- },
-  },
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
@@ -1139,3 +1098,27 @@ local get_option = vim.filetype.get_option
 vim.filetype.get_option = function(filetype, option)
   return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
 end
+
+vim.api.nvim_create_user_command('Format', function(args)
+  local range = nil
+  if args.count ~= -1 then
+    local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+    range = {
+      start = { args.line1, 0 },
+      ['end'] = { args.line2, end_line:len() },
+    }
+  end
+  require('conform').format { async = true, lsp_format = 'fallback', range = range }
+end, { range = true })
+
+local terminal_buf = nil
+
+vim.api.nvim_create_user_command('Term', function()
+  if vim.fn.bufexists(terminal_buf) == 1 and terminal_buf ~= nil then
+    local win = vim.fn.win_getid()
+    vim.api.nvim_win_set_buf(win, terminal_buf)
+  else
+    vim.cmd 'term'
+    terminal_buf = vim.fn.bufnr '%'
+  end
+end, {})

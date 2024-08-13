@@ -13,7 +13,13 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal' },
   },
   opts = {
+    close_if_last_window = true,
     filesystem = {
+      filtered_items = {
+        visible = true,
+        hide_dot_files = false,
+        never_show = { '.git' },
+      },
       window = {
         mappings = {
           ['\\'] = 'close_window',
