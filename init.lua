@@ -228,7 +228,7 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
-require('lazy').setup({
+require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -358,12 +358,10 @@ require('lazy').setup({
         defaults = {
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   n = {
+          --     ['<c-d>'] = require('telescope.actions').delete_buffer,
+          --   },
           -- },
-          mappings = {
-            n = {
-              ['<c-d>'] = require('telescope.actions').delete_buffer,
-            },
-          },
           file_ignore_patterns = {
             '.git/',
             -- '.node_modules/',
@@ -1079,17 +1077,14 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-})
+}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
 -- My config
 
-vim.api.nvim_create_autocmd('Filetype', {
-  pattern = { 'javascript', 'typescript' },
-  command = 'setlocal colorcolumn=80',
-})
+vim.opt.showtabline = 0
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
@@ -1099,6 +1094,7 @@ vim.filetype.get_option = function(filetype, option)
   return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
 end
 
+-- Format command
 vim.api.nvim_create_user_command('Format', function(args)
   local range = nil
   if args.count ~= -1 then
@@ -1111,8 +1107,8 @@ vim.api.nvim_create_user_command('Format', function(args)
   require('conform').format { async = true, lsp_format = 'fallback', range = range }
 end, { range = true })
 
+-- Open terminal in the same buffer
 local terminal_buf = nil
-
 vim.api.nvim_create_user_command('Term', function()
   if vim.fn.bufexists(terminal_buf) == 1 and terminal_buf ~= nil then
     local win = vim.fn.win_getid()

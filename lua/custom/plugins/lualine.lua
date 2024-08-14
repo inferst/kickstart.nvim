@@ -4,6 +4,11 @@ return {
     enabled = true,
     lazy = false,
     event = { 'BufReadPost', 'BufNewFile', 'VeryLazy' },
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    },
     opts = {
       options = {
         theme = 'auto',
@@ -39,7 +44,16 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-      tabline = {},
+      tabline = {
+        -- lualine_a = {
+        --   { 'tabs', mode = 2, path = 0 },
+        -- },
+        -- lualine_b = {},
+        -- lualine_c = {},
+        -- lualine_x = {},
+        -- lualine_y = {},
+        -- lualine_z = {},
+      },
       winbar = {},
       inactive_winbar = {},
       extensions = {},

@@ -3,7 +3,7 @@ return {
   opts = {
     plugins = {
       options = {
-        laststatus = 3,
+        -- laststatus = 3,
       },
     },
   },
