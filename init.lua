@@ -973,15 +973,15 @@ require('lazy').setup {
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'nord'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
+    -- init = function()
+    --   -- Load the colorscheme here.
+    --   -- Like many other themes, this one has different styles, and you could load
+    --   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+    --   vim.cmd.colorscheme 'tokyonight'
+    --
+    --   -- You can configure highlights by doing something like:
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -1123,7 +1123,13 @@ require('lazy').setup {
 
 vim.opt.showtabline = 0
 
-vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
+-- Sync buffers automatically
+vim.opt.autoread = true
+
+-- Disable neovim generating a swapfile and showing the error
+vim.opt.swapfile = false
+
+vim.keymap.set('n', '<leader>g', '<cmd>neogit<cr>', { desc = 'neo[g]it' })
 
 local get_option = vim.filetype.get_option
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -1131,8 +1137,8 @@ vim.filetype.get_option = function(filetype, option)
   return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
 end
 
--- Format command
-vim.api.nvim_create_user_command('Format', function(args)
+-- format command
+vim.api.nvim_create_user_command('format', function(args)
   local range = nil
   if args.count ~= -1 then
     local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]

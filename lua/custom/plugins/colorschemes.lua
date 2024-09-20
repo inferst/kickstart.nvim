@@ -6,6 +6,14 @@ return {
   {
     'catppuccin/nvim',
     priority = 1000,
+    config = function()
+      require('catppuccin').setup {
+        term_colors = true,
+      }
+
+      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.hi 'Comment gui=none'
+    end,
   },
   {
     'rebelot/kanagawa.nvim',
