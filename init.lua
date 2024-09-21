@@ -1129,7 +1129,7 @@ vim.opt.autoread = true
 -- Disable neovim generating a swapfile and showing the error
 vim.opt.swapfile = false
 
-vim.keymap.set('n', '<leader>g', '<cmd>neogit<cr>', { desc = 'neo[g]it' })
+vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
 local get_option = vim.filetype.get_option
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -1137,8 +1137,8 @@ vim.filetype.get_option = function(filetype, option)
   return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
 end
 
--- format command
-vim.api.nvim_create_user_command('format', function(args)
+-- Format command
+vim.api.nvim_create_user_command('Format', function(args)
   local range = nil
   if args.count ~= -1 then
     local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
