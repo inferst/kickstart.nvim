@@ -18,7 +18,7 @@ return {
           statusline = { 'dashboard', 'alpha', 'starter' },
         },
         always_divide_middle = true,
-        globalstatus = false,
+        globalstatus = true,
       },
       sections = {
         lualine_a = { 'mode' },

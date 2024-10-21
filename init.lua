@@ -400,6 +400,7 @@ require('lazy').setup {
           file_ignore_patterns = {
             '.git/',
             -- '.node_modules/',
+            -- '*.js.map',
           },
           path_display = {
             filename_first = {
@@ -706,6 +707,7 @@ require('lazy').setup {
             },
           },
         },
+
         ts_ls = {
           commands = {
             RenameFile = {
@@ -762,6 +764,42 @@ require('lazy').setup {
             },
           },
         },
+
+        cssls = {
+          settings = {
+            css = { validate = true, lint = {
+              unknownAtRules = 'ignore',
+            } },
+            scss = { validate = true, lint = {
+              unknownAtRules = 'ignore',
+            } },
+            less = { validate = true, lint = {
+              unknownAtRules = 'ignore',
+            } },
+          },
+        },
+
+        jsonls = {
+          settings = {
+            json = {
+              validate = { enable = true },
+              schemas = {
+                {
+                  fileMatch = { 'tsconfig*.json' },
+                  url = 'https://json.schemastore.org/tsconfig.json',
+                },
+                {
+                  fileMatch = { 'jsconfig*.json' },
+                  url = 'https://json.schemastore.org/jsconfig.json',
+                },
+                {
+                  fileMatch = { 'package.json' },
+                  url = 'https://json.schemastore.org/package.json',
+                },
+              },
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -784,6 +822,7 @@ require('lazy').setup {
         'css-lsp',
         'eslint-lsp',
         'stylelint-lsp',
+        'tailwindcss-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -973,15 +1012,21 @@ require('lazy').setup {
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    -- init = function()
-    --   -- Load the colorscheme here.
-    --   -- Like many other themes, this one has different styles, and you could load
-    --   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-    --   vim.cmd.colorscheme 'tokyonight'
-    --
-    --   -- You can configure highlights by doing something like:
-    --   vim.cmd.hi 'Comment gui=none'
-    -- end,
+    opts = {
+      styles = {
+        comments = { italic = false },
+        keywords = { italic = false },
+      },
+    },
+    init = function()
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'kanagawa'
+
+      -- You can configure highlights by doing something like:
+      -- vim.cmd.hi 'Comment gui=none'
+    end,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -1039,6 +1084,13 @@ require('lazy').setup {
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+        is_supported = function()
+          if vim.fn.strwidth(vim.fn.getline '.') > 300 or vim.fn.getfsize(vim.fn.expand '%') > 1024 * 1024 then
+            return false
+          else
+            return true
+          end
+        end,
       },
       indent = { enable = true, disable = { 'ruby' } },
       textobjects = {
@@ -1130,6 +1182,9 @@ vim.opt.autoread = true
 vim.opt.swapfile = false
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
+
+vim.keymap.set('n', '{', '<CMD>execute "keepjumps norm! {"<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '}', '<CMD>execute "keepjumps norm! }"<CR>', { noremap = true, silent = true })
 
 local get_option = vim.filetype.get_option
 ---@diagnostic disable-next-line: duplicate-set-field
