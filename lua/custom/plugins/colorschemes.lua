@@ -34,6 +34,29 @@ return {
   {
     'projekt0n/github-nvim-theme',
     priority = 1000,
+    config = function()
+      require('github-theme').setup {
+        options = {
+          styles = {
+            comments = 'NONE',
+            functions = 'NONE',
+            keywords = 'NONE',
+            variables = 'NONE',
+            conditionals = 'NONE',
+            constants = 'NONE',
+            numbers = 'NONE',
+            operators = 'NONE',
+            strings = 'NONE',
+            types = 'NONE',
+          },
+        },
+        groups = {
+          all = {
+            ['@string.special.url'] = { link = '@string.tsx' },
+          },
+        },
+      }
+    end,
   },
   {
     'rose-pine/neovim',
@@ -43,7 +66,6 @@ return {
         styles = {
           bold = true,
           italic = false,
-          transparency = false,
         },
       }
     end,
@@ -58,6 +80,23 @@ return {
       vim.g.nord_italic = false
       vim.g.nord_uniform_diff_background = true
       vim.g.nord_bold = false
+    end,
+  },
+  {
+    'scottmckendry/cyberdream.nvim',
+    priority = 1000,
+    config = function()
+      require('cyberdream').setup {
+      }
+    end,
+  },
+  {
+    'nyoom-engineering/oxocarbon.nvim',
+    priority = 1000,
+    config = function()
+      -- vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+      -- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+      -- vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
     end,
   },
 }

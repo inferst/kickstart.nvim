@@ -439,6 +439,16 @@ require('lazy').setup {
             layout_config = layout_config,
             show_line = false,
           },
+          lsp_dynamic_workspace_symbols = {
+            layout_strategy = 'flex',
+            layout_config = layout_config,
+            show_line = false,
+          },
+          lsp_document_symbols = {
+            layout_strategy = 'flex',
+            layout_config = layout_config,
+            show_line = false,
+          },
           colorscheme = {
             layout_strategy = 'flex',
             layout_config = layout_config,

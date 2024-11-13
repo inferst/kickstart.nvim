@@ -13,6 +13,7 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    open_files_do_not_replace_types = { 'trouble', 'qf' }, -- terminal is removed
     close_if_last_window = true,
     filesystem = {
       filtered_items = {
