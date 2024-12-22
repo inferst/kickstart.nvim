@@ -5,6 +5,10 @@ return {
     require('oil').setup {
       view_options = {
         show_hidden = true,
+        is_always_hidden = function(name, bufnr)
+          local m = name:match '^%.git$'
+          return m ~= nil
+        end,
       },
       lsp_file_methods = {
         -- Time to wait for LSP file operations to complete before skipping
