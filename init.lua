@@ -179,10 +179,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -531,7 +531,6 @@ require('lazy').setup {
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'saghen/blink.cmp',
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -557,6 +556,7 @@ require('lazy').setup {
 
       -- Allows extra capabilities provided by nvim-cmp
       -- 'hrsh7th/cmp-nvim-lsp',
+      'saghen/blink.cmp',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -736,47 +736,46 @@ require('lazy').setup {
           },
         },
 
-        ts_ls = {
-          commands = {
-            RenameFile = {
-              function()
-                local target_file
-                local source_file = vim.api.nvim_buf_get_name(0)
-
-                vim.ui.input({
-                  prompt = 'Target : ',
-                  completion = 'file',
-                  default = source_file,
-                }, function(input)
-                  target_file = input
-                end)
-
-                vim.lsp.util.rename(source_file, target_file, {})
-
-                vim.lsp.buf.execute_command {
-                  command = '_typescript.applyRenameFile',
-                  arguments = { {
-                    sourceUri = source_file,
-                    targetUri = target_file,
-                  } },
-                  title = '',
-                }
-              end,
-              description = 'Rename File',
-            },
-            OrganizeImports = {
-              function()
-                vim.lsp.buf.execute_command {
-                  command = '_typescript.organizeImports',
-                  arguments = { vim.api.nvim_buf_get_name(0) },
-                  title = '',
-                }
-              end,
-              description = 'Organize Imports',
-            },
-          },
-        },
+        -- ts_ls = {
+        --   commands = {
+        --     RenameFile = {
+        --       function()
+        --         local target_file
+        --         local source_file = vim.api.nvim_buf_get_name(0)
         --
+        --         vim.ui.input({
+        --           prompt = 'Target : ',
+        --           completion = 'file',
+        --           default = source_file,
+        --         }, function(input)
+        --           target_file = input
+        --         end)
+        --
+        --         vim.lsp.util.rename(source_file, target_file, {})
+        --
+        --         vim.lsp.buf.execute_command {
+        --           command = '_typescript.applyRenameFile',
+        --           arguments = { {
+        --             sourceUri = source_file,
+        --             targetUri = target_file,
+        --           } },
+        --           title = '',
+        --         }
+        --       end,
+        --       description = 'Rename File',
+        --     },
+        --     OrganizeImports = {
+        --       function()
+        --         vim.lsp.buf.execute_command {
+        --           command = '_typescript.organizeImports',
+        --           arguments = { vim.api.nvim_buf_get_name(0) },
+        --           title = '',
+        --         }
+        --       end,
+        --       description = 'Organize Imports',
+        --     },
+        --   },
+        -- },
 
         lua_ls = {
           -- cmd = { ... },
@@ -1043,30 +1042,6 @@ require('lazy').setup {
   --   end,
   -- },
 
-  -- { -- You can easily change to a different colorscheme.
-  --   -- Change the name of the colorscheme plugin below, and then
-  --   -- change the command in the config to whatever the name of that colorscheme is.
-  --   --
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',
-  --   priority = 1000, -- Make sure to load this before all the other start plugins.
-  --   opts = {
-  --     styles = {
-  --       comments = { italic = false },
-  --       keywords = { italic = false },
-  --     },
-  --   },
-  --   init = function()
-  --     -- Load the colorscheme here.
-  --     -- Like many other themes, this one has different styles, and you could load
-  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  --     vim.cmd.colorscheme 'kanagawa'
-  --
-  --     -- You can configure highlights by doing something like:
-  --     -- vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1223,6 +1198,9 @@ vim.opt.swapfile = false
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
 vim.keymap.set('n', '<leader>ot', '<CMD>Term<CR>', { desc = '[T]erminal' })
+vim.keymap.set('n', '<leader>od', '<CMD>DBUITabToggle<CR>', { desc = '[D]atabase' })
+
+vim.keymap.set('n', '<leader>n', '<CMD>NoNeckPain<CR>', { desc = '[N]o Neck Pain' })
 
 vim.keymap.set('n', '{', '<CMD>execute "keepjumps norm! {"<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '}', '<CMD>execute "keepjumps norm! }"<CR>', { noremap = true, silent = true })
@@ -1246,6 +1224,44 @@ vim.api.nvim_create_user_command('Format', function(args)
   require('conform').format { async = true, lsp_format = 'fallback', range = range }
 end, { range = true })
 
+-- Open DBUI in the tab
+local dbui_buf = nil
+local dbui_query_buf = nil
+vim.api.nvim_create_user_command('DBUITabToggle', function()
+  if vim.fn.bufexists(dbui_buf) == 1 and dbui_buf ~= nil then
+    local current = vim.api.nvim_get_current_tabpage()
+
+    for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
+      for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+        local winbufnr = vim.api.nvim_win_get_buf(winid)
+        local winvalid = vim.api.nvim_win_is_valid(winid)
+
+        if winvalid and winbufnr == dbui_buf then
+          if current == tabid then
+            vim.cmd 'DBUIClose'
+            dbui_buf = nil
+            vim.cmd 'tabclose'
+
+            if vim.fn.bufexists(dbui_query_buf) == 1 and dbui_query_buf ~= nil and vim.api.nvim_buf_line_count(dbui_query_buf) == 0 then
+              vim.api.nvim_buf_delete(dbui_query_buf, { force = true })
+              dbui_query_buf = nil
+            end
+            return
+          else
+            vim.api.nvim_set_current_tabpage(tabid)
+            return
+          end
+        end
+      end
+    end
+  else
+    vim.cmd 'tabnew'
+    dbui_query_buf = vim.fn.bufnr '%'
+    vim.cmd 'DBUI'
+    dbui_buf = vim.fn.bufnr '%'
+  end
+end, {})
+
 -- Open terminal in the same buffer
 local terminal_buf = nil
 vim.api.nvim_create_user_command('Term', function()
@@ -1256,4 +1272,9 @@ vim.api.nvim_create_user_command('Term', function()
     vim.cmd 'term'
     terminal_buf = vim.fn.bufnr '%'
   end
+end, {})
+
+-- OrganizeImports
+vim.api.nvim_create_user_command('OrganizeImports', function()
+  vim.api.nvim_command 'TSToolsOrganizeImports'
 end, {})

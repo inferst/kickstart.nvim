@@ -32,8 +32,21 @@ return {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'dadbod' },
       cmdline = {},
+      providers = {
+        dadbod = { name = 'Dadbod', module = 'vim_dadbod_completion.blink' },
+      },
+    },
+
+    completion = {
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 100,
+      },
+      -- ghost_text = {
+      --   enabled = true,
+      -- },
     },
   },
   opts_extend = { 'sources.default' },
