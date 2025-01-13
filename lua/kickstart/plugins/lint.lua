@@ -66,23 +66,18 @@ return {
         end,
       })
 
+      local tablelength = function(T)
+        local count = 0
+        for _ in pairs(T) do
+          count = count + 1
+        end
+        return count
+      end
+
       local codespell_ignore = function()
         local word = vim.fn.expand '<cword>'
 
         local lines = {}
-        local diagnostic = vim.diagnostic.get()
-
-        for _, value in pairs(diagnostic) do
-          vim.notify(value['source'], vim.log.levels.INFO)
-        end
-
-        local tablelength = function(T)
-          local count = 0
-          for _ in pairs(T) do
-            count = count + 1
-          end
-          return count
-        end
 
         for line in io.lines(filename) do
           if word == line then
@@ -109,7 +104,7 @@ return {
         lint.try_lint('codespell', { ignore_errors = true })
       end
 
-      vim.keymap.set('n', '<leader>ci', codespell_ignore, { desc = '[C]ode Spell [I]gnore' })
+      vim.keymap.set('n', '<leader>i', codespell_ignore, { desc = '[C]ode Spell [I]gnore' })
     end,
   },
 }

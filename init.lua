@@ -1187,6 +1187,7 @@ require('lazy').setup {
 
 -- My config
 
+-- Hide ugly tabs
 vim.opt.showtabline = 0
 
 -- Sync buffers automatically
@@ -1195,16 +1196,21 @@ vim.opt.autoread = true
 -- Disable neovim generating a swapfile and showing the error
 vim.opt.swapfile = false
 
+-- Indentation
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
 vim.keymap.set('n', '<leader>ot', '<CMD>Term<CR>', { desc = '[T]erminal' })
 vim.keymap.set('n', '<leader>od', '<CMD>DBUITabToggle<CR>', { desc = '[D]atabase' })
 
-vim.keymap.set('n', '<leader>n', '<CMD>NoNeckPain<CR>', { desc = '[N]o Neck Pain' })
+vim.keymap.set('n', '<leader>n', '<CMD>NoNeckPain<CR>', { desc = '[N]oNeckPain' })
 
 vim.keymap.set('n', '{', '<CMD>execute "keepjumps norm! {"<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '}', '<CMD>execute "keepjumps norm! }"<CR>', { noremap = true, silent = true })
 
+-- JSX comment support
 local get_option = vim.filetype.get_option
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.filetype.get_option = function(filetype, option)
@@ -1274,7 +1280,7 @@ vim.api.nvim_create_user_command('Term', function()
   end
 end, {})
 
--- OrganizeImports
+-- Organize Imports in typescript files
 vim.api.nvim_create_user_command('OrganizeImports', function()
   vim.api.nvim_command 'TSToolsOrganizeImports'
 end, {})
