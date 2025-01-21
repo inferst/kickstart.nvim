@@ -404,7 +404,7 @@ require('lazy').setup {
           -- },
           file_ignore_patterns = {
             '.git/',
-            -- '.node_modules/',
+            -- 'node_modules/',
             -- '*.js.map',
           },
           path_display = {
