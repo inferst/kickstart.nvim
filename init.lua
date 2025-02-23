@@ -405,7 +405,7 @@ require('lazy').setup {
           file_ignore_patterns = {
             '.git/',
             -- 'node_modules/',
-            -- '*.js.map',
+            '*.js.map',
           },
           path_display = {
             filename_first = {
@@ -427,12 +427,20 @@ require('lazy').setup {
           grep_string = {
             layout_strategy = 'flex',
             layout_config = layout_config,
-            additional_args = { '--hidden' },
+            additional_args = {
+              '--hidden',
+              '--only-matching',
+              '--max-filesize=1M',
+            },
           },
           live_grep = {
             layout_strategy = 'flex',
             layout_config = layout_config,
-            additional_args = { '--hidden' },
+            additional_args = {
+              '--hidden',
+              '--only-matching',
+              '--max-filesize=1M',
+            },
           },
           oldfiles = {
             layout_strategy = 'flex',
@@ -1046,7 +1054,17 @@ require('lazy').setup {
   -- },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  {
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      signs = false,
+      keywords = {
+        TODO = { icon = ' ', color = 'info', alt = { 'todo' } },
+      },
+    },
+  },
 
   -- { -- Collection of various small independent plugins/modules
   --   'echasnovski/mini.nvim',
