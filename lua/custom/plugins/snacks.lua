@@ -4,28 +4,26 @@ return {
   lazy = false,
   opts = {
     bigfile = { enabled = true },
-    -- dashboard = { enabled = true },
-    -- notifier = { enabled = true },
+    notifier = { enabled = true },
     quickfile = { enabled = true },
-    -- statuscolumn = { enabled = true },
-    -- words = { enabled = true },
     gitbrowse = { enabled = true },
+    input = { enabled = true },
+    indent = { enabled = true },
+    zen = {
+      enabled = true,
+      toggles = {
+        dim = false,
+      },
+    },
   },
   keys = {
     {
-      '<leader>og',
+      '<leader>b',
       function()
         Snacks.gitbrowse()
       end,
-      desc = '[G]it Browse',
+      desc = 'Git [B]rowse',
     },
-    -- {
-    --   '<leader>ot',
-    --   function()
-    --     Snacks.terminal()
-    --   end,
-    --   desc = 'Toggle Terminal',
-    -- },
     {
       ']]',
       function()
@@ -42,9 +40,26 @@ return {
       desc = 'Prev Reference',
       mode = { 'n', 't' },
     },
+    {
+      '<leader>z',
+      function()
+        Snacks.zen()
+      end,
+      desc = 'Toggle [Z]en Mode',
+    },
+    {
+      '<leader>Z',
+      function()
+        Snacks.zen.zoom()
+      end,
+      desc = 'Toggle [Z]oom',
+    },
+    {
+      '<leader>n',
+      function()
+        Snacks.notifier.show_history()
+      end,
+      desc = '[N]otification History',
+    },
   },
-  -- config = function()
-  --   local snacks = require('snacks')
-  --   vim.keymap.set('n', '<leader>og', snacks.gitbrowse.open, { desc = 'Neo[G]it' })
-  -- end,
 }

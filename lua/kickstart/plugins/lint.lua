@@ -65,46 +65,6 @@ return {
           end
         end,
       })
-
-      local tablelength = function(T)
-        local count = 0
-        for _ in pairs(T) do
-          count = count + 1
-        end
-        return count
-      end
-
-      local codespell_ignore = function()
-        local word = vim.fn.expand '<cword>'
-
-        local lines = {}
-
-        for line in io.lines(filename) do
-          if word == line then
-            return
-          end
-
-          table.insert(lines, line)
-        end
-
-        table.insert(lines, tablelength(lines), word .. '\n')
-
-        local file = io.open(filename, 'w')
-
-        if file then
-          for _, line in pairs(lines) do
-            file:write(line)
-          end
-
-          file:close()
-        end
-
-        vim.notify('Added ' .. word .. ' to .spellignore', vim.log.levels.INFO)
-
-        lint.try_lint('codespell', { ignore_errors = true })
-      end
-
-      vim.keymap.set('n', '<leader>i', codespell_ignore, { desc = '[C]ode Spell [I]gnore' })
     end,
   },
 }

@@ -1223,10 +1223,9 @@ vim.opt.tabstop = 2
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
-vim.keymap.set('n', '<leader>ot', '<CMD>Term<CR>', { desc = '[T]erminal' })
-vim.keymap.set('n', '<leader>od', '<CMD>DBUITabToggle<CR>', { desc = '[D]atabase' })
+vim.keymap.set('n', '<leader>p', '<CMD>DBUITabToggle<CR>', { desc = 'DBUI' })
 
-vim.keymap.set('n', '<leader>n', '<CMD>NoNeckPain<CR>', { desc = '[N]oNeckPain' })
+vim.keymap.set('n', '<c-/>', '<CMD>Term<CR>', { desc = 'Terminal' })
 
 vim.keymap.set('n', '{', '<CMD>execute "keepjumps norm! {"<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '}', '<CMD>execute "keepjumps norm! }"<CR>', { noremap = true, silent = true })
@@ -1254,6 +1253,7 @@ end, { range = true })
 -- Open DBUI in the tab
 local dbui_buf = nil
 local dbui_query_buf = nil
+
 vim.api.nvim_create_user_command('DBUITabToggle', function()
   if vim.fn.bufexists(dbui_buf) == 1 and dbui_buf ~= nil then
     local current = vim.api.nvim_get_current_tabpage()
@@ -1265,14 +1265,15 @@ vim.api.nvim_create_user_command('DBUITabToggle', function()
 
         if winvalid and winbufnr == dbui_buf then
           if current == tabid then
+            if vim.fn.bufexists(dbui_query_buf) == 1 and dbui_query_buf ~= nil then
+              vim.api.nvim_buf_delete(dbui_query_buf, { force = true })
+              dbui_query_buf = nil
+            end
+
             vim.cmd 'DBUIClose'
             dbui_buf = nil
             vim.cmd 'tabclose'
 
-            if vim.fn.bufexists(dbui_query_buf) == 1 and dbui_query_buf ~= nil and vim.api.nvim_buf_line_count(dbui_query_buf) == 0 then
-              vim.api.nvim_buf_delete(dbui_query_buf, { force = true })
-              dbui_query_buf = nil
-            end
             return
           else
             vim.api.nvim_set_current_tabpage(tabid)
@@ -1284,6 +1285,7 @@ vim.api.nvim_create_user_command('DBUITabToggle', function()
   else
     vim.cmd 'tabnew'
     dbui_query_buf = vim.fn.bufnr '%'
+
     vim.cmd 'DBUI'
     dbui_buf = vim.fn.bufnr '%'
   end
@@ -1291,6 +1293,7 @@ end, {})
 
 -- Open terminal in the same buffer
 local terminal_buf = nil
+
 vim.api.nvim_create_user_command('Term', function()
   if vim.fn.bufexists(terminal_buf) == 1 and terminal_buf ~= nil then
     local win = vim.fn.win_getid()
