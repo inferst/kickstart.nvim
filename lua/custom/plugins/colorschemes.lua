@@ -49,15 +49,14 @@ return {
   {
     'folke/tokyonight.nvim',
     priority = 1000,
-    opts = {
-      styles = {
-        comments = { italic = false },
-        keywords = { italic = false },
-      },
-    },
-    init = function()
-      -- You can configure highlights by doing something like:
-      -- vim.cmd.hi 'Comment gui=none'
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = false },
+          keywords = { italic = false },
+        },
+      }
     end,
   },
 }
