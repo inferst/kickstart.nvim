@@ -491,39 +491,39 @@ require('lazy').setup {
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      -- vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      -- vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      -- vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      -- vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      -- vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      -- vim.keymap.set('n', '<leader>/', function()
+      --   -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+      --   builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+      --     winblend = 10,
+      --     previewer = false,
+      --   })
+      -- end, { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
-      end, { desc = '[S]earch [/] in Open Files' })
+      -- vim.keymap.set('n', '<leader>s/', function()
+      --   builtin.live_grep {
+      --     grep_open_files = true,
+      --     prompt_title = 'Live Grep in Open Files',
+      --   }
+      -- end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      -- vim.keymap.set('n', '<leader>sn', function()
+      --   builtin.find_files { cwd = vim.fn.stdpath 'config' }
+      -- end, { desc = '[S]earch [N]eovim files' })
     end,
   },
 
@@ -536,6 +536,7 @@ require('lazy').setup {
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
+        { path = 'snacks.nvim', words = { 'Snacks' } },
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
@@ -622,27 +623,27 @@ require('lazy').setup {
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', Snacks.picker.lsp_definitions, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', Snacks.picker.lsp_references, '[G]oto [R]eferences')
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          map('gI', Snacks.picker.lsp_implementations, '[G]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
-          map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+          map('<leader>D', Snacks.picker.lsp_type_definitions, 'Type [D]efinition')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+          map('<leader>ds', Snacks.picker.lsp_symbols, '[D]ocument [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          map('<leader>ws', Snacks.picker.lsp_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
@@ -663,6 +664,7 @@ require('lazy').setup {
           ---@return boolean
           local function client_supports_method(client, method, bufnr)
             if vim.fn.has 'nvim-0.11' == 1 then
+              ---@diagnostic disable-next-line: param-type-mismatch, redundant-parameter
               return client:supports_method(method, bufnr)
             else
               return client.supports_method(method, { bufnr = bufnr })
@@ -786,45 +788,157 @@ require('lazy').setup {
           },
         },
 
+        vtsls = {
+          -- explicitly add default filetypes, so that we can extend
+          -- them in related extras
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+          },
+          settings = {
+            complete_function_calls = true,
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                maxInlayHintLength = 30,
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                },
+              },
+            },
+            typescript = {
+              updateImportsOnFileMove = { enabled = 'always' },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = 'literals' },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+            },
+          },
+          keys = {
+            -- {
+            --   'gD',
+            --   function()
+            --     local params = vim.lsp.util.make_position_params()
+            --     vim.lsp.execute {
+            --       command = '_typescript.goToSourceDefinition',
+            --       arguments = { params.textDocument.uri, params.position },
+            --       open = true,
+            --     }
+            --   end,
+            --   desc = 'Goto Source Definition',
+            -- },
+            -- {
+            --   'gR',
+            --   function()
+            --     vim.lsp.execute {
+            --       command = '_typescript.findAllFileReferences',
+            --       arguments = { vim.uri_from_bufnr(0) },
+            --       open = true,
+            --     }
+            --   end,
+            --   desc = 'File References',
+            -- },
+            -- {
+            --   '<leader>co',
+            --   function()
+            --     vim.lsp.buf.code_action {
+            --       context = { only = { 'source.organizeImports' } },
+            --       apply = true,
+            --     }
+            --   end,
+            --   desc = 'Organize Imports',
+            -- },
+            -- {
+            --   '<leader>cM',
+            --   function()
+            --     vim.lsp.buf.code_action {
+            --       context = { only = { 'source.addMissingImports.ts' } },
+            --       apply = true,
+            --     }
+            --   end,
+            --   desc = 'Add missing imports',
+            -- },
+            -- {
+            --   '<leader>cu',
+            --   function()
+            --     vim.lsp.buf.code_action {
+            --       context = { only = { 'source.removeUnused.ts' } },
+            --       apply = true,
+            --     }
+            --   end,
+            --   desc = 'Remove unused imports',
+            -- },
+            -- {
+            --   '<leader>cD',
+            --   function()
+            --     vim.lsp.buf.code_action {
+            --       context = { only = { 'source.fixAll.ts' } },
+            --       apply = true,
+            --     }
+            --   end,
+            --   desc = 'Fix all diagnostics',
+            -- },
+            -- {
+            --   '<leader>cV',
+            --   function()
+            --     vim.lsp.execute { command = 'typescript.selectTypeScriptVersion' }
+            --   end,
+            --   desc = 'Select TS workspace version',
+            -- },
+          },
+        },
+
         -- ts_ls = {
-        --   commands = {
-        --     RenameFile = {
-        --       function()
-        --         local target_file
-        --         local source_file = vim.api.nvim_buf_get_name(0)
-        --
-        --         vim.ui.input({
-        --           prompt = 'Target : ',
-        --           completion = 'file',
-        --           default = source_file,
-        --         }, function(input)
-        --           target_file = input
-        --         end)
-        --
-        --         vim.lsp.util.rename(source_file, target_file, {})
-        --
-        --         vim.lsp.buf.execute_command {
-        --           command = '_typescript.applyRenameFile',
-        --           arguments = { {
-        --             sourceUri = source_file,
-        --             targetUri = target_file,
-        --           } },
-        --           title = '',
-        --         }
-        --       end,
-        --       description = 'Rename File',
-        --     },
-        --     OrganizeImports = {
-        --       function()
-        --         vim.lsp.buf.execute_command {
-        --           command = '_typescript.organizeImports',
-        --           arguments = { vim.api.nvim_buf_get_name(0) },
-        --           title = '',
-        --         }
-        --       end,
-        --       description = 'Organize Imports',
-        --     },
-        --   },
+        --   -- commands = {
+        --   --   RenameFile = {
+        --   --     function()
+        --   --       local target_file
+        --   --       local source_file = vim.api.nvim_buf_get_name(0)
+        --   --
+        --   --       vim.ui.input({
+        --   --         prompt = 'Target : ',
+        --   --         completion = 'file',
+        --   --         default = source_file,
+        --   --       }, function(input)
+        --   --         target_file = input
+        --   --       end)
+        --   --
+        --   --       vim.lsp.util.rename(source_file, target_file, {})
+        --   --
+        --   --       vim.lsp.buf.execute_command {
+        --   --         command = '_typescript.applyRenameFile',
+        --   --         arguments = { {
+        --   --           sourceUri = source_file,
+        --   --           targetUri = target_file,
+        --   --         } },
+        --   --         title = '',
+        --   --       }
+        --   --     end,
+        --   --     description = 'Rename File',
+        --   --   },
+        --   --   OrganizeImports = {
+        --   --     function()
+        --   --       vim.lsp.buf.execute_command {
+        --   --         command = '_typescript.organizeImports',
+        --   --         arguments = { vim.api.nvim_buf_get_name(0) },
+        --   --         title = '',
+        --   --       }
+        --   --     end,
+        --   --     description = 'Organize Imports',
+        --   --   },
+        --   -- },
         -- },
 
         lua_ls = {
@@ -1265,12 +1379,42 @@ vim.opt.tabstop = 2
 
 vim.keymap.set('n', '<leader>g', '<CMD>Neogit<CR>', { desc = 'Neo[G]it' })
 
+vim.keymap.set('n', '<leader>u', '<CMD>GrugFar<CR>', { desc = 'GrugFar' })
+
 vim.keymap.set('n', '<leader>p', '<CMD>DBUITabToggle<CR>', { desc = 'DBUI' })
 
 vim.keymap.set('n', '<c-/>', '<CMD>Term<CR>', { desc = 'Terminal' })
 
 vim.keymap.set('n', '{', '<CMD>execute "keepjumps norm! {"<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '}', '<CMD>execute "keepjumps norm! }"<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>co', function()
+  vim.lsp.buf.code_action {
+    context = { diagnostics = {}, only = { 'source.organizeImports' } },
+    apply = true,
+  }
+end, { desc = 'Organize Imports' })
+vim.keymap.set('n', '<leader>cM', function()
+  vim.lsp.buf.code_action {
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    context = { diagnostics = {}, only = { 'source.addMissingImports.ts' } },
+    apply = true,
+  }
+end, { desc = 'Add missing imports' })
+vim.keymap.set('n', '<leader>cu', function()
+  vim.lsp.buf.code_action {
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    context = { diagnostics = {}, only = { 'source.removeUnused.ts' } },
+    apply = true,
+  }
+end, { desc = 'Remove unused imports' })
+vim.keymap.set('n', '<leader>cD', function()
+  vim.lsp.buf.code_action {
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    context = { diagnostics = {}, only = { 'source.fixAll.ts' } },
+    apply = true,
+  }
+end, { desc = 'Fix all diagnostics' })
 
 -- JSX comment support
 local get_option = vim.filetype.get_option
@@ -1312,7 +1456,6 @@ vim.api.nvim_create_user_command('DBUITabToggle', function()
               dbui_query_buf = nil
             end
 
-            vim.cmd 'DBUIClose'
             dbui_buf = nil
             vim.cmd 'tabclose'
 
@@ -1346,7 +1489,44 @@ vim.api.nvim_create_user_command('Term', function()
   end
 end, {})
 
--- Organize Imports in typescript files
-vim.api.nvim_create_user_command('OrganizeImports', function()
-  vim.api.nvim_command 'TSToolsOrganizeImports'
-end, {})
+-- -- Organize Imports in typescript files
+-- vim.api.nvim_create_user_command('OrganizeImports', function()
+--   vim.api.nvim_command 'TSToolsOrganizeImports'
+-- end, {})
+
+-- Close buffers when files are deleted in Oil
+vim.api.nvim_create_autocmd('User', {
+  desc = 'Close buffers when files are deleted in Oil',
+  pattern = 'OilActionsPost',
+  callback = function(args)
+    if args.data.err then
+      return
+    end
+    for _, action in ipairs(args.data.actions) do
+      if action.type == 'delete' then
+        local _, path = require('oil.util').parse_url(action.url)
+        local bufnr = vim.fn.bufnr(path)
+        if bufnr ~= -1 then
+          vim.cmd.bwipeout { bufnr, bang = true }
+        end
+      end
+    end
+  end,
+})
+
+-- Set tab title
+function _G.current_tab()
+  local path = {}
+  local cwd = vim.uv.cwd()
+
+  if cwd then
+    for item in string.gmatch(cwd, '([^/]+)') do
+      table.insert(path, item)
+    end
+  end
+
+  return path[#path]
+end
+
+vim.opt.titlestring = [[%{luaeval('current_tab()')} [%t] %h%m%r%w]]
+vim.opt.title = true

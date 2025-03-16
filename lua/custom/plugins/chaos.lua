@@ -4,7 +4,7 @@ return {
   config = function()
     local chaos = require 'nvim_chaos'
     chaos.setup {
-      channel = 'mikerimea',
+      channel = 'mikerime',
       commands = {
         message = '!msg',
         colorscheme = {

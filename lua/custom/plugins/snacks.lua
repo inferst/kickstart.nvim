@@ -14,8 +14,106 @@ return {
         dim = false,
       },
     },
+    picker = {
+      --   formatters = {
+      --     file = {
+      --       truncate = 70,
+      --     },
+      --   },
+      --   sources = {
+      --     smart = {
+      --       formatters = {
+      --         file = {
+      --           truncate = 200,
+      --         },
+      --       },
+      --       layout = {
+      --         preview = false,
+      --       },
+      --     },
+      --     lsp_references = {
+      --       focus = 'list',
+      --     },
+      --     git_status = {
+      --       focus = 'list',
+      --     },
+      --   },
+    },
   },
   keys = {
+    {
+      '<leader>sf',
+      function()
+        Snacks.picker.files()
+      end,
+      desc = '[S]earch [F]iles',
+    },
+    {
+      '<leader><leader>',
+      function()
+        Snacks.picker.buffers()
+      end,
+      desc = '[ ] Find existing buffers',
+    },
+    {
+      '<leader>sk',
+      function()
+        Snacks.picker.keymaps()
+      end,
+      desc = '[S]earch [K]eymaps',
+    },
+    {
+      '<leader>s.',
+      function()
+        Snacks.picker.recent {
+          filter = { cwd = true },
+        }
+      end,
+      desc = '[S]earch Recent Files ("." for repeat)',
+    },
+    {
+      '<leader>sd',
+      function()
+        Snacks.picker.diagnostics()
+      end,
+      desc = '[S]earch [D]iagnostics',
+    },
+    {
+      '<leader>sn',
+      function()
+        Snacks.picker.files { cwd = vim.fn.stdpath 'config' }
+      end,
+      desc = '[S]earch [N]eovim files',
+    },
+    {
+      '<leader>sg',
+      function()
+        Snacks.picker.grep()
+      end,
+      desc = '[S]earch by [G]rep',
+    },
+    {
+      '<leader>sw',
+      function()
+        Snacks.picker.grep_word()
+      end,
+      desc = '[S]earch current [W]ord',
+      mode = { 'n', 'x' },
+    },
+    {
+      '<leader>sr',
+      function()
+        Snacks.picker.resume()
+      end,
+      desc = '[S]earch [R]esume',
+    },
+    {
+      '<leader>ss',
+      function()
+        Snacks.picker.lsp_symbols()
+      end,
+      desc = 'LSP Symbols',
+    },
     {
       '<leader>b',
       function()
