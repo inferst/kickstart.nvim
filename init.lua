@@ -812,6 +812,9 @@ require('lazy').setup {
               },
             },
             typescript = {
+              tsserver = {
+                maxTsServerMemory = 4096,
+              },
               updateImportsOnFileMove = { enabled = 'always' },
               suggest = {
                 completeFunctionCalls = true,
@@ -823,6 +826,9 @@ require('lazy').setup {
                 parameterTypes = { enabled = true },
                 propertyDeclarationTypes = { enabled = true },
                 variableTypes = { enabled = false },
+              },
+              preferences = {
+                importModuleSpecifier = 'non-relative',
               },
             },
           },
@@ -1528,5 +1534,27 @@ function _G.current_tab()
   return path[#path]
 end
 
-vim.opt.titlestring = [[%{luaeval('current_tab()')} [%t] %h%m%r%w]]
+-- Hide "No information available" notification
+vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
+  config = config or {}
+  config.focus_id = ctx.method
+  if not (result and result.contents) then
+    return
+  end
+  local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+  markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
+  if vim.tbl_isempty(markdown_lines) then
+    return
+  end
+  return vim.lsp.util.open_floating_preview(markdown_lines, 'markdown', config)
+end
+
+-- Terminal window title
+vim.opt.titlestring = [[[%{luaeval('current_tab()')}] %t %h%m%r%w]]
 vim.opt.title = true
+
+local orig_hover = vim.lsp.buf.hover
+---@diagnostic disable-next-line: duplicate-set-field
+vim.lsp.buf.hover = function()
+  orig_hover { border = 'solid' }
+end
