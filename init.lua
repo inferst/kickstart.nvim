@@ -773,7 +773,15 @@ require('lazy').setup {
         rust_analyzer = {
           settings = {
             ['rust-analyzer'] = {
-              checkOnSave = {
+              -- cargo = {
+              --   allFeatures = true,
+              --   loadOutDirsFromCheck = true,
+              --   buildScripts = {
+              --     enable = true,
+              --   },
+              -- },
+              check = {
+                enable = true,
                 command = 'clippy',
                 extraArgs = {
                   '--',
@@ -784,6 +792,7 @@ require('lazy').setup {
                   '-Wclippy::pedantic',
                 },
               },
+              checkOnSave = true,
             },
           },
         },
@@ -1095,6 +1104,7 @@ require('lazy').setup {
         javascript = { 'prettier', 'prettierd' },
         javascriptreact = { 'prettier', 'prettierd' },
         css = { 'prettier', 'prettierd' },
+        toml = { 'taplo' },
       },
     },
   },
@@ -1550,7 +1560,7 @@ vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
 end
 
 -- Terminal window title
-vim.opt.titlestring = [[[%{luaeval('current_tab()')}] %t %h%m%r%w]]
+vim.opt.titlestring = [[[%{luaeval('current_tab()')}] %t]]
 vim.opt.title = true
 
 local orig_hover = vim.lsp.buf.hover
