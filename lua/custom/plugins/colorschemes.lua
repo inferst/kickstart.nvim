@@ -20,9 +20,6 @@ return {
         }
       end,
     },
-    init = function()
-      vim.cmd.colorscheme 'kanagawa'
-    end,
   },
   {
     'catppuccin/nvim',
@@ -57,6 +54,15 @@ return {
           keywords = { italic = false },
         },
       }
+    end,
+  },
+  {
+    'bluz71/vim-moonfly-colors',
+    name = 'moonfly',
+    priority = 1000,
+    lazy = false,
+    init = function()
+      vim.cmd.colorscheme 'moonfly'
     end,
   },
 }
