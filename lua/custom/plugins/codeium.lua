@@ -29,20 +29,20 @@ return {
         -- -- Defaults to \t normally or <c-n> when a popup is showing.
         -- accept_fallback = nil,
         -- -- Key bindings for managing completions in virtual text mode.
-        -- key_bindings = {
-        --   -- Accept the current completion.
-        --   accept = '<Tab>',
-        --   -- Accept the next word.
-        --   accept_word = false,
-        --   -- Accept the next line.
-        --   accept_line = false,
-        --   -- Clear the virtual text.
-        --   clear = false,
-        --   -- Cycle to the next completion.
-        --   next = '<M-]>',
-        --   -- Cycle to the previous completion.
-        --   prev = '<M-[>',
-        -- },
+        key_bindings = {
+          -- Accept the current completion.
+          accept = '<C-a>',
+          -- Accept the next word.
+          accept_word = false,
+          -- Accept the next line.
+          accept_line = false,
+          -- Clear the virtual text.
+          clear = false,
+          -- Cycle to the next completion.
+          next = '<M-]>',
+          -- Cycle to the previous completion.
+          prev = '<M-[>',
+        },
       },
     }
   end,

@@ -20,6 +20,9 @@ return {
         }
       end,
     },
+    -- init = function()
+    --   vim.cmd.colorscheme 'kanagawa'
+    -- end,
   },
   {
     'catppuccin/nvim',

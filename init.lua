@@ -162,7 +162,7 @@ vim.opt.shortmess = vim.opt.shortmess + 'I'
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
-vim.opt.confirm = true
+-- vim.opt.confirm = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -780,6 +780,7 @@ require('lazy').setup {
       -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities(capabilities))
       capabilities.textDocument.completion.completionItem.snippetSupport = true
+      require('lspconfig').gdscript.setup(capabilities)
       -- --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       -- --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       -- local capabilities = require('blink.cmp').get_lsp_capabilities()
@@ -804,32 +805,32 @@ require('lazy').setup {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        rust_analyzer = {
-          settings = {
-            ['rust-analyzer'] = {
-              -- cargo = {
-              --   allFeatures = true,
-              --   loadOutDirsFromCheck = true,
-              --   buildScripts = {
-              --     enable = true,
-              --   },
-              -- },
-              check = {
-                enable = true,
-                command = 'clippy',
-                extraArgs = {
-                  '--',
-                  '--no-deps',
-                  '-Dclippy::correctness',
-                  '-Dclippy::complexity',
-                  '-Wclippy::perf',
-                  '-Wclippy::pedantic',
-                },
-              },
-              checkOnSave = true,
-            },
-          },
-        },
+        -- rust_analyzer = {
+        --   settings = {
+        --     ['rust-analyzer'] = {
+        --       -- cargo = {
+        --       --   allFeatures = true,
+        --       --   loadOutDirsFromCheck = true,
+        --       --   buildScripts = {
+        --       --     enable = true,
+        --       --   },
+        --       -- },
+        --       check = {
+        --         enable = true,
+        --         command = 'clippy',
+        --         extraArgs = {
+        --           '--',
+        --           '--no-deps',
+        --           '-Dclippy::correctness',
+        --           '-Dclippy::complexity',
+        --           '-Wclippy::perf',
+        --           '-Wclippy::pedantic',
+        --         },
+        --       },
+        --       checkOnSave = true,
+        --     },
+        --   },
+        -- },
 
         vtsls = {
           -- explicitly add default filetypes, so that we can extend
@@ -1065,6 +1066,7 @@ require('lazy').setup {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'rust-analyzer',
         'prettierd',
         'prettier',
         'html-lsp',
@@ -1081,6 +1083,12 @@ require('lazy').setup {
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        automatic_enable = {
+          exclude = {
+            'rust_analyzer',
+            'ts_ls',
+          },
+        },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -1404,6 +1412,8 @@ require('lazy').setup {
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
+  -- require 'custom.godot',
+
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
@@ -1604,5 +1614,16 @@ vim.opt.title = true
 local orig_hover = vim.lsp.buf.hover
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.lsp.buf.hover = function()
-  orig_hover { border = 'solid' }
+  orig_hover { border = 'rounded' }
 end
+
+vim.o.foldmethod = 'indent'
+vim.o.foldlevel = 99
+
+vim.filetype.add({
+  extension = {
+    mdx = 'markdown'
+  }
+})
+
+require 'custom.godot'

@@ -3,6 +3,12 @@ return {
   opts = {},
   config = function()
     require('oil').setup {
+      columns = {
+        "icon",
+        -- "permissions",
+        "size",
+        -- "mtime",
+      },
       view_options = {
         show_hidden = true,
         is_always_hidden = function(name, bufnr)
